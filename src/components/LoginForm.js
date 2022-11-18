@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import _ from 'lodash';
+import InputField from './InputField';
 // import jwt from 'jsonwebtoken';
 
 function LoginForm({ onLogin }) {
@@ -9,10 +10,25 @@ function LoginForm({ onLogin }) {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
+  const emailError = 
+  !email ? 'Email is required.' : 
+  !email.includes('@') ? 'Email must include @ sign.' :
+  '';
+  
+  const passwordError = 
+  !password ? 'Password is required.' :
+  password.length < 8 ? 'Password must be at least 8 characters,' : 
+  '';
+
   function onClickSubmit(evt) {
     evt.preventDefault();
     setError('');
     setSuccess('');
+
+    if(emailError || passwordError){
+      setError('Please fix errors above.');
+      return;
+    }
 
     axios(`${process.env.REACT_APP_API_URL}/api/user/login`, {
       method: 'post',
@@ -72,33 +88,25 @@ function LoginForm({ onLogin }) {
     <div>
       <h1>Login</h1>
       <form>
-        <div className="mb-3">
-          <label className="form-label" htmlFor="txtEmail">
-            Email
-          </label>
-          <input
-            className="form-control"
-            id="txtEmail"
-            type="email"
-            autoComplete="email"
-            placeholder="name@example.com"
-            value={email}
-            onChange={(evt) => setEmail(evt.currentTarget.value)}
-          />
-        </div>
-        <div className="mb-3">
-          <label className="form-label" htmlFor="txtPassword">
-            Password
-          </label>
-          <input
-            className="form-control"
-            id="txtPassword"
-            type="password"
-            autoComplete="current-password"
-            value={password}
-            onChange={(evt) => setPassword(evt.currentTarget.value)}
-          />
-        </div>
+        <InputField 
+        label='Email' 
+        id='txtEmail' 
+        type='email' 
+        autoComplete='email' 
+        value={email}
+        className='form-control'
+        onChange={(evt) => setEmail(evt.currentTarget.value)}
+        error={emailError} />
+        <InputField
+         label='Password'
+         id='txtPassword'
+         type='password'
+         autoComplete='current-password'
+         className='form-control'
+         placeholder=''
+         value={password}
+         onChange={(evt) => setPassword(evt.currentTarget.value)}
+         error={passwordError} />
         <div className="mb-3">
           <button
             className="btn btn-primary"
