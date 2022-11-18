@@ -2,7 +2,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import _ from 'lodash';
 import InputField from './InputField';
-// import jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 
 function LoginForm({ onLogin }) {
   const [email, setEmail] = useState('');
@@ -37,13 +37,13 @@ function LoginForm({ onLogin }) {
       .then((res) => {
         console.log(res);
         setSuccess(res.data.message);
-        // const authPayload = jwt.decode(res.data.token);
+        const authPayload = jwt.decode(res.data.token);
         const auth = {
           email,
           userId: res.data.userId,
           token: res.data.token,
           role:res.data.role,
-          // payload: authPayload,
+          payload: authPayload,
         };
         console.log(auth);
         onLogin(auth);

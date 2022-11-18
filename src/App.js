@@ -31,7 +31,7 @@ function App() {
       <div className="flex-grow-1">
         <main className="container my-5">
           {screen === '/login' && <LoginForm onLogin={onLogin} />}
-          {screen === '/pet/list' && <PetList />}
+          {screen === '/pet/list' && <PetList auth={auth} />}
         </main>
       </div>
       <Footer />
