@@ -3,7 +3,8 @@ import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-function PetList({ auth }) {
+
+function PetList({ auth, showError }) {
   const [pending, setPending] = useState(true);
   const [items, setItems] = useState(null);
   const [error, setError] = useState('');
@@ -13,7 +14,7 @@ function PetList({ auth }) {
     setError('');
     axios(`${process.env.REACT_APP_API_URL}/api/pet/list`, {
       method: 'get',
-      params: { species: 'Cat' },
+      // params: { species: 'Cat' },
       headers: { authorization: `Bearer ${auth?.token}` },
     })
       .then((res) => {
@@ -23,14 +24,16 @@ function PetList({ auth }) {
           setItems(res.data);
         } else {
           setError('Expected an array');
+          showError('Expected an array');
         }
       })
       .catch((err) => {
         setPending(false);
         console.log(err);
         setError(err.message);
+        showError(err.message);
       });
-  }, []);
+  }, [auth, showError]);
 
   return (
     <div>
