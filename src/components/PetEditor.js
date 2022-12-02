@@ -4,11 +4,15 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import _ from 'lodash';
 import InputField from './InputField';
+ import {useNavigate} from 'react-router-dom';
 
 function PetEditor({ auth, showError, showSuccess }) {
   const { petId } = useParams();
   const [pet, setPet] = useState(null);
   const [error, setError] = useState('');
+
+ const navigate = useNavigate();
+
 
   useEffect(() => {
     axios(`${process.env.REACT_APP_API_URL}/api/pet/${petId}`, {
@@ -25,6 +29,7 @@ function PetEditor({ auth, showError, showSuccess }) {
         setError(err.message);
         showError(err.message);
       });
+    
   }, [auth, petId]);
 
   function setPetName(evt) {
@@ -47,6 +52,7 @@ function PetEditor({ auth, showError, showSuccess }) {
     }).then((res) => {
       console.log(res);
       showSuccess(res.data.message);
+      navigate('/pet/list');
     }).catch((err) =>{
       console.log(err);
     });
